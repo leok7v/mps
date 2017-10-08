@@ -73,7 +73,7 @@ static void server() {
     struct sockaddr_in address = localhost();
     r = bind(listener, (const struct sockaddr*)&address, sizeof(struct sockaddr_in));
     if (r != 0) { perror("bind() failed"); exit(1); }
-    r = listen(listener, 1);
+    r = listen(listener, 16);
     if (r != 0) { perror("listen() failed"); exit(1); }
     int s = accept(listener, null, 0);    
     if (s <= 0) { perror("accept() failed"); exit(1); }
@@ -107,6 +107,9 @@ static void client() {
 //      printf("client sent: 0x%02X\n", b);
         send_byte(s, b);
         report_mps(&last_mps_time, &mps);
+//      adding 9 ms sleep make it: roundtrips per second=98-101 with combined CPU utilization ~1.5%        
+//      struct timespec ts = {0, 9 * NANOSECONDS_IN_MILLISECOND};
+//      nanosleep(&ts, null);
     }
 }
 
